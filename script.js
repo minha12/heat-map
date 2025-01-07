@@ -1,5 +1,4 @@
-
-  const drawGraph = (data, basetemp) => {
+const drawGraph = (data, basetemp) => {
   const width = 1400, height = 400, left = 60, top = 50, right = 50, bottom = 100
   const barWidth = width /(data.length /12)
   const barHeight = height /12
@@ -71,7 +70,7 @@
     .attr('data-year', d => d.year)
     .attr('data-month', d => d.month - 1)
     .attr('data-temp', d => d.variance)
-    .on('mouseover', (d, i) => {
+    .on('mouseover', (event, d) => {
     displayLabel
       .html(`
             <p>
@@ -81,13 +80,13 @@
             </p>
             `)
       .style('opacity', .9)
-      .style('top', (d3.event.pageY + 15) + 'px')
-      .style('left', (d3.event.pageX + 10) + 'px')
+      .style('top', (event.pageY + 15) + 'px')
+      .style('left', (event.pageX + 10) + 'px')
       //.style('transform', 'translateY(-100px)')
       .attr('data-year', d.year);
 
   })
-    .on('mouseout', (d, i) => {
+    .on('mouseout', (event, d) => {
     displayLabel
       .style('opacity', 0)
   })
@@ -116,10 +115,9 @@
 
 const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
 
-d3.json(url, (err, data) => {
-  if(err) throw err
+d3.json(url).then(data => {
   const dataset = data.monthlyVariance
   const basetemp = data.baseTemperature
   //console.log(dataset)
   drawGraph(dataset, basetemp)
-})
+}).catch(err => console.log(err))
